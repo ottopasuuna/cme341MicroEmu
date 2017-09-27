@@ -1,4 +1,7 @@
 from cpu import Micro
+import random
+from hypothesis import given
+from hypothesis.strategies import integers
 
 registers = ['x0', 'x1', 'y0', 'y1', 'o_reg', 'i_pins', 'i', 'm', 'r']
 int_registers = ['_x0', '_x1', '_y0', '_y1', 'o_reg', 'i_pins', '_i', '_m', '_r']
@@ -53,3 +56,19 @@ def test_load():
         raise RuntimeError('Did not handle invalid destination')
     except ValueError:
         pass
+
+def test_mov():
+    for source in registers:
+        m = Micro()
+        val = random.randint(0,255)
+        m.i_pins = val/2+5
+        print('i_pins: '+str(m.i_pins))
+        print('source: '+source)
+        for dest in registers:
+            m.mov(dest, source)
+            print('dest: '+dest)
+            if dest != source:
+                assert(getattr(m, '_'+dest) == val)
+            else:
+                assert(getattr(m, '_'+dest) == m.i_pins)
+

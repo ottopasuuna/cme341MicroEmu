@@ -47,4 +47,16 @@ class Micro(object):
         else:
             raise ValueError('Invalid destination register')
 
+    def mov(self, dest, source):
+        ''' Move data from one register to another'''
+        print(dest, source)
+        if dest == source:
+            if dest == 'o_reg' and source == 'r':
+                self.o_reg = self._r
+            else:
+                setattr(self, '_'+dest, self.i_pins)
+        else:
+            print(getattr(self, '_'+source))
+            setattr(self, '_'+dest, getattr(self, '_'+source))
+
 
