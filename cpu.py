@@ -71,6 +71,9 @@ class Micro(object):
         if dest == source:
             setattr(self, dest, self.i_pins)
         else:
+            if dest == 'i' and source == 'dm':
+                # don't auto increment i
+                self.i = self._dm[self.i]
             setattr(self, dest, getattr(self, source))
 
 

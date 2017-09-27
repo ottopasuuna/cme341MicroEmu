@@ -39,7 +39,14 @@ def test_load():
         if reg not in ['i_pins', 'r']:
             check_load(reg, 1)
 
-    # Test RAM
+    try:
+        m.load('i_pins', 1)
+        raise RuntimeError('Did not handle invalid destination')
+    except ValueError:
+        pass
+
+def test_ram_load():
+    m = Micro()
     m.i = 0
     m.m = 1
     for x in range(0,16):
@@ -48,13 +55,8 @@ def test_load():
     for x in range(0,16):
         assert(m.dm == x)
 
-    try:
-        m.load('i_pins', 1)
-        raise RuntimeError('Did not handle invalid destination')
-    except ValueError:
-        pass
 
-def test_mov():
+def test_valid_mov():
     for source in registers:
         for dest in registers:
             if dest in ['i_pins', 'r']:
@@ -76,7 +78,8 @@ def test_mov():
                 assert(getattr(m, dest) == val)
             else:
                 assert(getattr(m, dest) == m.i_pins)
-
+def test_invalid_mov():
+    for source in registers:
         for dest in ['i_pins', 'r']:
             m = Micro()
             val = random.randint(0,255)
@@ -86,4 +89,30 @@ def test_mov():
             except ValueError:
                 pass
 
+def test_mem_dest_mov():
+    for source in registers:
+        if source in ['i', 'm']:
+            continue
+        m = Micro()
+        m.i = 0
+        m.m = 1
+        for val in range(0,16):
+            setattr(m, source, val)
+            m.mov('dm', source)
+        for val in range(0,16):
+            assert(m.dm == val)
+
+def test_mem_source_mov():
+    for dest in registers:
+        if dest in ['i_pins', 'r', 'i', 'm']:
+            continue # TODO: test i and m registers
+        m = Micro()
+        m.i = 0
+        m.m = 1
+        for val in range(0,16):
+            m._dm[val] = val
+        for val in range(0,16):
+            m.mov(dest, 'dm')
+            print(getattr(m, dest))
+            assert(getattr(m, dest) == val)
 
