@@ -14,7 +14,7 @@ def test_init():
     assert(m.r == 0)
     assert(m.i_pins == 0)
     assert(m.o_reg == 0)
-    assert(m.dm == [0]*16)
+    assert(m._dm == [0]*16)
 
 def test_string():
     m = Micro()
@@ -40,9 +40,13 @@ def test_load():
             check_load(reg, 1)
 
     # Test RAM
-    # TODO: make this more thurough
-    m.load('dm', 1)
-    assert(m.dm[m.i] == 1)
+    m.i = 0
+    m.m = 1
+    for x in range(0,16):
+        m.load('dm', x)
+
+    for x in range(0,16):
+        assert(m.dm == x)
 
     try:
         m.load('i_pins', 1)

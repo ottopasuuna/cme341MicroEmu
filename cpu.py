@@ -16,7 +16,7 @@ class Micro(object):
         self.r     = 0
         self.o_reg  = 0
         self.i_pins = 0
-        self.dm = [0]*16
+        self._dm = [0]*16
 
     def __str__(self):
         ''' String representation of the mircoprocessor state'''
@@ -24,8 +24,24 @@ class Micro(object):
         registers += f'x0:{self.x0}   x1:{self.x1}   y0:{self.y0}   y1:{self.y1}\n'
         registers += f'i:{self.i}   m:{self.m}   r:{self.r}  o_reg:{self.o_reg}  i_pins:{self.i_pins}\n'
         memory = 'Memory:\n'
-        memory += str(self.dm)
+        memory += str(self._dm)
         return registers+memory
+
+    @property
+    def dm(self):
+        val = self._dm[self.i]
+        self.i += self.m
+        if self.i == 16:
+            self.i = 0
+        return val
+
+    @dm.setter
+    def dm(self, val):
+        self._dm[self.i] = val
+        self.i += self.m
+        # i is only 4 bits...
+        if self.i == 16:
+            self.i = 0
 
     def load(self, dest, data):
         ''' Load a valid register with a value'''
@@ -44,7 +60,7 @@ class Micro(object):
         elif dest == 'o_reg':
             self.o_reg = data
         elif dest == 'dm':
-            self.dm[self.i] = data
+            self.dm = data
         else:
             raise ValueError('Invalid destination register')
 
