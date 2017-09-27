@@ -116,3 +116,24 @@ def test_mem_source_mov():
             print(getattr(m, dest))
             assert(getattr(m, dest) == val)
 
+def test_valid_negate():
+    m = Micro()
+    val = random.randint(0,255)
+    for reg in ['x0', 'x1']:
+        setattr(m, reg, val)
+        m.neg(reg)
+        assert(m.r == -1*val)
+
+def test_invalid_negate():
+    m = Micro()
+    val = random.randint(0,255)
+    for reg in registers:
+        if reg in ['x0', 'x1']:
+            continue
+        setattr(m, reg, val)
+        try:
+            m.neg(reg)
+            raise RuntimeError('Did not detect invalid register for negate instruction')
+        except ValueError:
+            pass
+

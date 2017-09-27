@@ -76,5 +76,13 @@ class Micro(object):
                 self.i = self._dm[self.i]
             setattr(self, dest, getattr(self, source))
 
+    def neg(self, reg):
+        if reg == 'x0':
+            self.r = -1*self.x0
+        elif reg == 'x1':
+            self.r = -1*self.x0
+        else:
+            raise ValueError('Can only negate X0 or X1')
+
 
 
