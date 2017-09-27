@@ -3,12 +3,12 @@ from cpu import Micro
 
 def test_init():
     m = Micro()
-    assert(m.x0 == 0)
-    assert(m.x1 == 0)
-    assert(m.y0 == 0)
-    assert(m.y1 == 0)
-    assert(m.i == 0)
-    assert(m.m == 0)
+    assert(m._x0 == 0)
+    assert(m._x1 == 0)
+    assert(m._y0 == 0)
+    assert(m._y1 == 0)
+    assert(m._i == 0)
+    assert(m._m == 0)
     assert(m.i_pins == 0)
     assert(m.o_reg == 0)
     assert(m._dm == [0]*16)
