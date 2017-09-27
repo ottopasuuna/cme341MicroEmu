@@ -2,20 +2,19 @@ import random
 from cpu import Micro
 
 registers = ['x0', 'x1', 'y0', 'y1', 'o_reg', 'i_pins', 'i', 'm', 'r']
-int_registers = ['_x0', '_x1', '_y0', '_y1', '_o_reg', 'i_pins', '_i', '_m', '_r']
 
 def test_init():
     m = Micro()
-    assert(m._x0 == 0)
-    assert(m._x1 == 0)
-    assert(m._y0 == 0)
-    assert(m._y1 == 0)
-    assert(m._i == 0)
-    assert(m._m == 0)
-    assert(m._r == 0)
+    assert(m.x0 == 0)
+    assert(m.x1 == 0)
+    assert(m.y0 == 0)
+    assert(m.y1 == 0)
+    assert(m.i == 0)
+    assert(m.m == 0)
+    assert(m.r == 0)
     assert(m.i_pins == 0)
-    assert(m._o_reg == 0)
-    assert(m._dm == [0]*16)
+    assert(m.o_reg == 0)
+    assert(m.dm == [0]*16)
 
 def test_string():
     m = Micro()
@@ -32,8 +31,7 @@ def test_load():
     m = Micro()
     def check_load(reg, data):
         m.load(reg, data)
-        reg_str = '_'+reg
-        assert(getattr(m, reg_str) == data)
+        assert(getattr(m, reg) == data)
 
     # Test valid registers
     # TODO: use random numbers for data
@@ -44,7 +42,7 @@ def test_load():
     # Test RAM
     # TODO: make this more thurough
     m.load('dm', 1)
-    assert(m._dm[m._i] == 1)
+    assert(m.dm[m.i] == 1)
 
     try:
         m.load('i_pins', 1)
@@ -64,16 +62,16 @@ def test_mov():
             if source not in ['i_pins', 'r']:
                 m.load(source, val)
             elif source == 'r':
-                m._r = val # can't use m.load
+                m.r = val # can't use m.load
             # Make i_pins different so we know the cpu isn't cheating
             m.i_pins = val+4
 
             m.mov(dest, source)
             if dest != source and source != 'i_pins':
                 print(dest, source)
-                assert(getattr(m, '_'+dest) == val)
+                assert(getattr(m, dest) == val)
             else:
-                assert(getattr(m, '_'+dest) == m.i_pins)
+                assert(getattr(m, dest) == m.i_pins)
 
         for dest in ['i_pins', 'r']:
             m = Micro()
