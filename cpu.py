@@ -84,5 +84,23 @@ class Micro(object):
         else:
             raise ValueError('Can only negate X0 or X1')
 
+    def add(self, reg1, reg2):
+        raise NotImplementedError()
 
+    def sub(self, reg1, reg2):
+        raise NotImplementedError()
 
+    def mulhi(self, reg1, reg2):
+        raise NotImplementedError()
+
+    def mullo(self, reg1, reg2):
+        raise NotImplementedError()
+
+    def and_op(self, reg1, reg2):
+        raise NotImplementedError()
+
+    def xor(self, reg1, reg2):
+        raise NotImplementedError()
+
+    def com(self, reg):
+        raise NotImplementedError()
