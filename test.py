@@ -1,10 +1,8 @@
-from cpu import Micro
 import random
-from hypothesis import given
-from hypothesis.strategies import integers
+from cpu import Micro
 
 registers = ['x0', 'x1', 'y0', 'y1', 'o_reg', 'i_pins', 'i', 'm', 'r']
-int_registers = ['_x0', '_x1', '_y0', '_y1', 'o_reg', 'i_pins', '_i', '_m', '_r']
+int_registers = ['_x0', '_x1', '_y0', '_y1', '_o_reg', 'i_pins', '_i', '_m', '_r']
 
 def test_init():
     m = Micro()
@@ -16,7 +14,7 @@ def test_init():
     assert(m._m == 0)
     assert(m._r == 0)
     assert(m.i_pins == 0)
-    assert(m.o_reg == 0)
+    assert(m._o_reg == 0)
     assert(m._dm == [0]*16)
 
 def test_string():
@@ -34,10 +32,7 @@ def test_load():
     m = Micro()
     def check_load(reg, data):
         m.load(reg, data)
-        if reg != 'o_reg':
-            reg_str = '_'+reg
-        else:
-            reg_str = reg
+        reg_str = '_'+reg
         assert(getattr(m, reg_str) == data)
 
     # Test valid registers
@@ -59,16 +54,34 @@ def test_load():
 
 def test_mov():
     for source in registers:
-        m = Micro()
-        val = random.randint(0,255)
-        m.i_pins = val/2+5
-        print('i_pins: '+str(m.i_pins))
-        print('source: '+source)
         for dest in registers:
+            if dest in ['i_pins', 'r']:
+                continue
+            m = Micro()
+            val = random.randint(0,255)
+
+            # load source with a value
+            if source not in ['i_pins', 'r']:
+                m.load(source, val)
+            elif source == 'r':
+                m._r = val # can't use m.load
+            # Make i_pins different so we know the cpu isn't cheating
+            m.i_pins = val+4
+
             m.mov(dest, source)
-            print('dest: '+dest)
-            if dest != source:
+            if dest != source and source != 'i_pins':
+                print(dest, source)
                 assert(getattr(m, '_'+dest) == val)
             else:
                 assert(getattr(m, '_'+dest) == m.i_pins)
+
+        for dest in ['i_pins', 'r']:
+            m = Micro()
+            val = random.randint(0,255)
+            try:
+                m.mov(dest, source)
+                raise RuntimeError('Did not handle invalid destination')
+            except ValueError:
+                pass
+
 
