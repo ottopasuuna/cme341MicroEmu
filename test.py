@@ -137,6 +137,7 @@ def test_invalid_negate():
         except ValueError:
             pass
 
+
 def test_valid_add():
     m = Micro()
     xval = random.randint(0,255)
@@ -147,6 +148,7 @@ def test_valid_add():
             setattr(m, y, yval)
             m.add(x,y)
             assert(m.r == xval+yval)
+
 
 def test_invalid_add():
     m = Micro()
@@ -182,6 +184,7 @@ def test_valid_sub():
             m.sub(x,y)
             assert(m.r == xval-yval)
 
+
 def test_invalid_sub():
     m = Micro()
     for x in registers:
@@ -191,7 +194,7 @@ def test_invalid_sub():
         try:
             m.sub(x, y)
             print(x, y)
-            raise RuntimeError('Failed to catch invalid add operation')
+            raise RuntimeError('Failed to catch invalid sub operation')
         except ValueError:
             pass
     for y in registers:
@@ -201,6 +204,80 @@ def test_invalid_sub():
         try:
             m.sub(x, y)
             print(x, y)
-            raise RuntimeError('Failed to catch invalid add operation')
+            raise RuntimeError('Failed to catch invalid sub operation')
         except ValueError:
             pass
+
+
+def test_valid_and():
+    m = Micro()
+    xval = random.randint(0,255)
+    yval = random.randint(0,255)
+    for x in ['x0', 'x1']:
+        setattr(m, x, xval)
+        for y in ['y0', 'y1']:
+            setattr(m, y, yval)
+            m.and_op(x,y)
+            assert(m.r == xval & yval)
+
+
+def test_invalid_and():
+    m = Micro()
+    for x in registers:
+        if x in ['x0', 'x1']:
+            continue
+        y = 'y0'
+        try:
+            m.and_op(x, y)
+            print(x, y)
+            raise RuntimeError('Failed to catch invalid and operation')
+        except ValueError:
+            pass
+    for y in registers:
+        if y in ['y0', 'y1']:
+            continue
+        x = 'x0'
+        try:
+            m.and_op(x, y)
+            print(x, y)
+            raise RuntimeError('Failed to catch invalid and operation')
+        except ValueError:
+            pass
+
+
+def test_valid_xor():
+    m = Micro()
+    xval = random.randint(0,255)
+    yval = random.randint(0,255)
+    for x in ['x0', 'x1']:
+        setattr(m, x, xval)
+        for y in ['y0', 'y1']:
+            setattr(m, y, yval)
+            m.xor(x,y)
+            assert(m.r == xval ^ yval)
+
+
+def test_invalid_xor():
+    m = Micro()
+    for x in registers:
+        if x in ['x0', 'x1']:
+            continue
+        y = 'y0'
+        try:
+            m.xor(x, y)
+            print(x, y)
+            raise RuntimeError('Failed to catch invalid xor operation')
+        except ValueError:
+            pass
+    for y in registers:
+        if y in ['y0', 'y1']:
+            continue
+        x = 'x0'
+        try:
+            m.xor(x, y)
+            print(x, y)
+            raise RuntimeError('Failed to catch invalid xor operation')
+        except ValueError:
+            pass
+
+

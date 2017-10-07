@@ -128,10 +128,14 @@ class Micro(object):
         raise NotImplementedError()
 
     def and_op(self, reg1, reg2):
-        raise NotImplementedError()
+        if reg1 not in ['x1', 'x0'] or reg2 not in ['y0', 'y1']:
+            raise ValueError('Invalid register for and')
+        self.r = getattr(self, reg1) & getattr(self, reg2)
 
     def xor(self, reg1, reg2):
-        raise NotImplementedError()
+        if reg1 not in ['x1', 'x0'] or reg2 not in ['y0', 'y1']:
+            raise ValueError('Invalid register for and')
+        self.r = getattr(self, reg1) ^ getattr(self, reg2)
 
     def com(self, reg):
         raise NotImplementedError()
