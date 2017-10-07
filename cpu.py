@@ -104,7 +104,22 @@ class Micro(object):
 
 
     def sub(self, reg1, reg2):
-        raise NotImplementedError()
+        if reg1 == 'x0':
+            if reg2 == 'y0':
+                self.r = self.x0 - self.y0
+            elif reg2 == 'y1':
+                self.r = self.x0 - self.y1
+            else:
+                raise ValueError('Invalid registers for subtraction')
+        elif reg1 == 'x1':
+            if reg2 == 'y0':
+                self.r = self.x0 - self.y0
+            elif reg2 == 'y1':
+                self.r = self.x0 - self.y1
+            else:
+                raise ValueError('Invalid registers for subtraction')
+        else:
+            raise ValueError('Invalid registers for subtraction')
 
     def mulhi(self, reg1, reg2):
         raise NotImplementedError()
