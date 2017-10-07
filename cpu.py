@@ -85,7 +85,23 @@ class Micro(object):
             raise ValueError('Can only negate X0 or X1')
 
     def add(self, reg1, reg2):
-        raise NotImplementedError()
+        if reg1 == 'x0':
+            if reg2 == 'y0':
+                self.r = self.x0 + self.y0
+            elif reg2 == 'y1':
+                self.r = self.x0 + self.y1
+            else:
+                raise ValueError('Invalid registers for addition')
+        elif reg1 == 'x1':
+            if reg2 == 'y0':
+                self.r = self.x0 + self.y0
+            elif reg2 == 'y1':
+                self.r = self.x0 + self.y1
+            else:
+                raise ValueError('Invalid registers for addition')
+        else:
+            raise ValueError('Invalid registers for addition')
+
 
     def sub(self, reg1, reg2):
         raise NotImplementedError()
