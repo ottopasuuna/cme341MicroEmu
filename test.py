@@ -281,3 +281,24 @@ def test_invalid_xor():
             pass
 
 
+def test_valid_compliment():
+    m = Micro()
+    val = random.randint(0,255)
+    for reg in ['x0', 'x1']:
+        setattr(m, reg, val)
+        m.com(reg)
+        assert(m.r == ~val)
+
+def test_invalid_compliment():
+    m = Micro()
+    val = random.randint(0,255)
+    for reg in registers:
+        if reg in ['x0', 'x1']:
+            continue
+        setattr(m, reg, val)
+        try:
+            m.com(reg)
+            raise RuntimeError('Did not detect invalid register for compliment instruction')
+        except ValueError:
+            pass
+

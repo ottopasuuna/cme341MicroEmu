@@ -138,4 +138,9 @@ class Micro(object):
         self.r = getattr(self, reg1) ^ getattr(self, reg2)
 
     def com(self, reg):
-        raise NotImplementedError()
+        if reg == 'x0':
+            self.r = ~self.x0
+        elif reg == 'x1':
+            self.r = ~self.x0
+        else:
+            raise ValueError('Can only invert X0 or X1')
