@@ -280,6 +280,56 @@ def test_invalid_xor():
         except ValueError:
             pass
 
+def test_valid_multiply():
+    m = Micro()
+    xval = random.randint(0,0xF)
+    yval = random.randint(0,0xF)
+    for x in ['x0', 'x1']:
+        setattr(m, x, xval)
+        for y in ['y0', 'y1']:
+            setattr(m, y, yval)
+            m.mulhi(x,y)
+            lsw = m.r
+            m.mullo(x,y)
+            msw = m.r
+            assert(((msw << 4)|lsw) == xval * yval)
+
+
+def test_invalid_multiply():
+    m = Micro()
+    for x in registers:
+        if x in ['x0', 'x1']:
+            continue
+        y = 'y0'
+        try:
+            m.mulhi(x, y)
+            print(x, y)
+            raise RuntimeError('Failed to catch invalid mulhi operation')
+        except ValueError:
+            pass
+        try:
+            m.mullo(x, y)
+            print(x, y)
+            raise RuntimeError('Failed to catch invalid mullo operation')
+        except ValueError:
+            pass
+    for y in registers:
+        if y in ['y0', 'y1']:
+            continue
+        x = 'x0'
+        try:
+            m.mulhi(x, y)
+            print(x, y)
+            raise RuntimeError('Failed to catch invalid mulhi operation')
+        except ValueError:
+            pass
+        try:
+            m.mullo(x, y)
+            print(x, y)
+            raise RuntimeError('Failed to catch invalid mullo operation')
+        except ValueError:
+            pass
+
 
 def test_valid_compliment():
     m = Micro()

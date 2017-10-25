@@ -121,11 +121,15 @@ class Micro(object):
         else:
             raise ValueError('Invalid registers for subtraction')
 
-    def mulhi(self, reg1, reg2):
-        raise NotImplementedError()
-
     def mullo(self, reg1, reg2):
-        raise NotImplementedError()
+        if reg1 not in ['x1', 'x0'] or reg2 not in ['y0', 'y1']:
+            raise ValueError('Invalid register for mulhi')
+        self.r = 0x0F & (getattr(self, reg1) * getattr(self, reg2))
+
+    def mulhi(self, reg1, reg2):
+        if reg1 not in ['x1', 'x0'] or reg2 not in ['y0', 'y1']:
+            raise ValueError('Invalid register for mullo')
+        self.r = (0xF0 & (getattr(self, reg1) * getattr(self, reg2))) >> 4
 
     def and_op(self, reg1, reg2):
         if reg1 not in ['x1', 'x0'] or reg2 not in ['y0', 'y1']:
